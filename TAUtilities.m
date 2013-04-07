@@ -10,7 +10,7 @@
 
 @implementation TAUtilities
 
-#define PHONE_THUMBNAIL_IMAGE_SIZE 60
+#define PHONE_THUMBNAIL_IMAGE_SIZE 70
 
 + (void)initTitle:(NSString *)title on:(UINavigationItem *)navigationItem
 {
@@ -20,8 +20,8 @@
         titleView.backgroundColor = [UIColor  clearColor];
         titleView.font = [UIFont fontWithName:@"Arial-BoldMT" size:20];
         
-        titleView.textColor = [[UIColor alloc] initWithRed:255/255.f green:255/255.f blue:255/255.f alpha:1.f];
-        titleView.shadowColor = [[UIColor alloc] initWithRed:50/255.f green:93/255.f blue:115/255.f alpha:1.f];
+        titleView.textColor = [[UIColor alloc] initWithRed:115/255.f green:115/255.f blue:115/255.f alpha:1.f];
+        titleView.shadowColor = [[UIColor alloc] initWithRed:255/255.f green:255/255.f blue:255/255.f alpha:1.f];
         
         
         navigationItem.titleView = titleView;
@@ -136,8 +136,8 @@
 {
     UIImage *buttonOff;
     UIImage *buttonOn;
-    buttonOff = [UIImage imageNamed:@"nav_blank_off"];
-    buttonOn   = [UIImage imageNamed:@"nav_blank_on"];
+    buttonOff = [UIImage imageNamed:@"btn_go"];
+    buttonOn   = [UIImage imageNamed:@"btn_go"];
     
     UIImage *buttonOffSizable;
     UIImage *buttonOnSizable;
@@ -172,7 +172,7 @@
     
     [barButton setTitleColor:[[UIColor alloc] initWithRed:18/255.f green:121/255.f blue:172/255.f alpha:1.f] forState:UIControlStateNormal];
     
-    [barButton setTitleColor:[[UIColor alloc] initWithRed:255/255.f green:255/255.f blue:255/255.f alpha:1.f] forState:UIControlStateHighlighted];
+    [barButton setTitleColor:[[UIColor alloc] initWithRed:255/255.f green:255/255.f blue:255/255.f alpha:1.f] forState:UIControlStateNormal];
     
     [barButton setTitle:title forState:UIControlStateNormal];
     barButton.titleLabel.font = font;

@@ -18,13 +18,25 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [TAUtilities initTitle:@"Confirmation" on:self.navigationItem];
-        [TAUtilities initBackButtonOn:self withAction:@selector(backButtonClicked)];
+        //[TAUtilities initBackButtonOn:self withAction:@selector(backButtonClicked)];
+        self.navigationItem.leftBarButtonItem = nil;
+        self.navigationItem.hidesBackButton=YES;
     }
     return self;
 }
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg.png"]];
+    [self.view addSubview:backgroundImageView];
+    [self.view sendSubviewToBack:backgroundImageView];
+    
+    [self.sendMoreGiftsButton  setBackgroundImage:[UIImage imageNamed:@"btn_add.png"]
+                                   forState:UIControlStateNormal];
+    
+    
+    [self.sendMoreGiftsButton setTitle: @"Send more Gift" forState:UIControlStateNormal];
     
     if ([TACommonState sharedObj].orderProducts) {
         int count = [[TACommonState sharedObj].orderProducts count];
@@ -46,6 +58,10 @@
             [self.orderedProductView addSubview:imageView];
         }
     }
+}
+
+-(void) backButtonClicked {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)backToHomePage:(id)sender {

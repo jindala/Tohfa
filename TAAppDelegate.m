@@ -20,8 +20,12 @@
     // Override point for customization after application launch.
     self.viewController = [[TASelectProductController alloc] initWithNibName:@"TASelectProductController" bundle:nil];
     navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
-    navigationController.navigationBar.tintColor = [UIColor colorWithRed:116/255.f green:186/255.f blue:227/255.f alpha:1.f];
-
+    //navigationController.navigationBar.tintColor = [UIColor colorWithRed:116/255.f green:186/255.f blue:227/255.f alpha:1.f];
+    
+    if ([navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] ) {
+        UIImage *image = [UIImage imageNamed:@"header_nav.png"];
+        [navigationController.navigationBar setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+    }
     self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
     return YES;

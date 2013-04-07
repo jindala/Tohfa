@@ -28,7 +28,6 @@
 
 @synthesize renderView = _renderView;
 @synthesize photosTableView = _photosTableView;
-@synthesize selectAction = _selectAction;
 @synthesize renderingProductImage = _renderingProductImage;
 @synthesize cartView = _cartView;
 
@@ -40,7 +39,7 @@ NSInteger selectedImageIndex;
     if (self) {
         [TAUtilities initTitle:@"Tohfa" on:self.navigationItem];
         
-        [TAUtilities initBackButtonOn:self withAction:@selector(backButtonClicked)];
+        //[TAUtilities initBackButtonOn:self withAction:@selector(backButtonClicked)];
     
         UIBarButtonItem *sendButton = [[UIBarButtonItem alloc] initWithCustomView:[TAUtilities createRightContinueNavButtonWithTitle:@"Send" For:self withAction:@selector(sendGiftOptions)]];
         self.navigationItem.rightBarButtonItem = sendButton;
@@ -51,7 +50,11 @@ NSInteger selectedImageIndex;
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg.png"]];
+    [self.view addSubview:backgroundImageView];
+    [self.view sendSubviewToBack:backgroundImageView];
+    
+    
     self.photosTableView.separatorColor = [UIColor clearColor];
     self.photosTableView.delegate = self;
     self.photosTableView.dataSource = self;
@@ -61,17 +64,23 @@ NSInteger selectedImageIndex;
     self.imgArray = [[NSMutableArray alloc] init];
     self.thumbnailArray = [[NSMutableArray alloc] init];
 
-    self.renderingProductImage.image = [UIImage imageNamed:@"snapfish-necklace.png"];
-    self.renderedOverlayImageFrame = CGRectMake(80, 100, 85, 85);
+    self.renderingProductImage.image = [UIImage imageNamed:@"necklace-dotted.png"];
+    self.renderedOverlayImageFrame = CGRectMake(145, 213, 210, 210);;
     
     self.cartProducts = [[NSMutableDictionary alloc] init];
     
-    [self.selectAction setTitle:@"Choose a Friend" forState:UIControlStateNormal];
+    [self.selectAction  setBackgroundImage:[UIImage imageNamed:@"btn_add.png"] forState:UIControlStateNormal];
+    [self.selectProduct  setBackgroundImage:[UIImage imageNamed:@"btn_add.png"]
+                                  forState:UIControlStateNormal];
+    
+    
     [self.selectProduct setTitle: @"Save and Add more" forState:UIControlStateNormal];
+    [self.selectAction setTitle:@"Choose a Friend" forState:UIControlStateNormal];
     
     self.selectProduct.hidden = YES;
     self.cartView.hidden = YES;
     self.photosTableView.hidden = YES;
+    self.selectAction.hidden = NO;
 }
 
 - (void)viewDidUnload {
@@ -80,6 +89,12 @@ NSInteger selectedImageIndex;
     [self setPhotosTableView:nil];
     [super viewDidUnload];
 }
+
+-(void) backButtonClicked {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
 - (IBAction)takeAction:(id)sender {
     self.selectAction.hidden = YES;
     self.selectProduct.hidden = NO;
@@ -88,23 +103,23 @@ NSInteger selectedImageIndex;
 }
 
 - (IBAction)canvasIconClick:(id)sender {
-    self.renderingProductImage.image = [UIImage imageNamed:@"snapfish-canvas.png"];
-    self.renderedOverlayImageFrame = CGRectMake(20, 20, 205, 205);
+    self.renderingProductImage.image = [UIImage imageNamed:@"frame-dotted.png"];
+    self.renderedOverlayImageFrame = CGRectMake(86, 83, 320, 320);
 }
 
 - (IBAction)necklaceIconClick:(id)sender {
-    self.renderingProductImage.image = [UIImage imageNamed:@"snapfish-necklace.png"];
-    self.renderedOverlayImageFrame = CGRectMake(80, 100, 85, 85);
+    self.renderingProductImage.image = [UIImage imageNamed:@"necklace-dotted.png"];
+    self.renderedOverlayImageFrame = CGRectMake(145, 213, 210, 210);
 }
 
 - (IBAction)tshirtIconClick:(id)sender {
-    self.renderingProductImage.image = [UIImage imageNamed:@"snapfish-t.png"];
-    self.renderedOverlayImageFrame = CGRectMake(80, 70, 85, 60);
+    self.renderingProductImage.image = [UIImage imageNamed:@"shirt-dotted.png"];
+    self.renderedOverlayImageFrame = CGRectMake(171, 94, 145, 145);
 }
 
 - (IBAction)mugIconClick:(id)sender {
-    self.renderingProductImage.image = [UIImage imageNamed:@"snapfish-mug.png"];
-    self.renderedOverlayImageFrame = CGRectMake(80, 67, 85, 85);
+    self.renderingProductImage.image = [UIImage imageNamed:@"mug-dotted.png"];
+    self.renderedOverlayImageFrame = CGRectMake(95, 155, 194, 194);
 }
 
 - (IBAction)productSelected:(id)sender {
@@ -112,9 +127,10 @@ NSInteger selectedImageIndex;
     self.selectedProductInfoLabel.hidden = YES;
     int subViewCount = [self.cartView.subviews count];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(subViewCount*40+5, 0, 40, 40)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(subViewCount*50+10, 3, 50, 50)];
     imageView.image = self.renderingProductImage.image;
     self.cartView.hidden = NO;
+    [self.cartView sizeToFit];
     [self.cartView addSubview:imageView];
     [self.cartView setNeedsDisplay];
     
@@ -182,6 +198,9 @@ NSInteger selectedImageIndex;
     self.photosTableView.hidden = NO;
     [self.playView setFrame:CGRectMake(83,47, 231, 470)];
     self.cartView.hidden= NO;
+    self.cartView.backgroundColor = [UIColor whiteColor];
+    [self.cartView sizeToFit];
+    [self.cartView setNeedsDisplay];
     [self dismissViewControllerAnimated:YES completion:^{
     }];
     [self.photosTableView reloadData];

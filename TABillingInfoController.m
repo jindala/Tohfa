@@ -18,16 +18,23 @@
     if (self) {
         [TAUtilities initTitle:@"Billing Info" on:self.navigationItem];
         
-        [TAUtilities initBackButtonOn:self withAction:@selector(backButtonClicked)];
+        //[TAUtilities initBackButtonOn:self withAction:@selector(backButtonClicked)];
         
         UIBarButtonItem *placeOrderButton = [[UIBarButtonItem alloc] initWithCustomView:[TAUtilities createRightContinueNavButtonWithTitle:@"Place Order" For:self withAction:@selector(placeOrder)]];
         self.navigationItem.rightBarButtonItem = placeOrderButton;
+        self.navigationItem.leftBarButtonItem = nil;
+        self.navigationItem.hidesBackButton=YES;
+        
     }
     return self;
 }
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg.png"]];
+    [self.view addSubview:backgroundImageView];
+    [self.view sendSubviewToBack:backgroundImageView];
     
     self.holderNameField.text = @"Test";
     self.holderCardNumberField.text = @"123456789012";
@@ -56,6 +63,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:self.view.window];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShowNotification:) name:UIKeyboardDidShowNotification object:self.view.window];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHideNotification:) name:UIKeyboardDidHideNotification object:self.view.window];
+}
+
+-(void) backButtonClicked {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)placeOrder{
