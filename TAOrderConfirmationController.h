@@ -7,7 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface TAOrderConfirmationController : UIViewController
+@property (weak, nonatomic) IBOutlet UIView *orderedProductView;
+@property (weak, nonatomic) IBOutlet UIButton *sendMoreGiftsButton;
+
+
+- (IBAction)backToHomePage:(id)sender;
 
 @end

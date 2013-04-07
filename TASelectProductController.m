@@ -10,14 +10,16 @@
 #import "TAUtilities.h"
 #import "ELCAlbumPickerController.h"
 #import "TABillingInfoController.h"
+#import "TACommonState.h"
 
 @interface TASelectProductController ()
 
 @property (nonatomic) ABRecordRef receiver;
 @property (nonatomic, strong) NSMutableArray *imgArray;
 @property (nonatomic, strong) NSMutableArray *thumbnailArray;
-@property ( nonatomic, strong) UIImage *selectedImage;
+
 @property (nonatomic) CGRect renderedOverlayImageFrame;
+@property (nonatomic, strong) NSMutableDictionary *cartProducts;
 
 
 @end
@@ -27,8 +29,10 @@
 @synthesize renderView = _renderView;
 @synthesize photosTableView = _photosTableView;
 @synthesize selectAction = _selectAction;
-@synthesize selectedImage = _selectedImage;
 @synthesize renderingProductImage = _renderingProductImage;
+@synthesize cartView = _cartView;
+
+NSInteger selectedImageIndex;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,11 +56,22 @@
     self.photosTableView.delegate = self;
     self.photosTableView.dataSource = self;
     
+    [self.playView setFrame:CGRectMake(40,23, 231, 470)];
+    
     self.imgArray = [[NSMutableArray alloc] init];
     self.thumbnailArray = [[NSMutableArray alloc] init];
 
-    self.renderingProductImage.image = [UIImage imageNamed:@"snapfish-canvas.png"];
-    self.renderedOverlayImageFrame = CGRectMake(20, 20, 205, 205);
+    self.renderingProductImage.image = [UIImage imageNamed:@"snapfish-necklace.png"];
+    self.renderedOverlayImageFrame = CGRectMake(80, 100, 85, 85);
+    
+    self.cartProducts = [[NSMutableDictionary alloc] init];
+    
+    [self.selectAction setTitle:@"Choose a Friend" forState:UIControlStateNormal];
+    [self.selectProduct setTitle: @"Save and Add more" forState:UIControlStateNormal];
+    
+    self.selectProduct.hidden = YES;
+    self.cartView.hidden = YES;
+    self.photosTableView.hidden = YES;
 }
 
 - (void)viewDidUnload {
@@ -66,16 +81,9 @@
     [super viewDidUnload];
 }
 - (IBAction)takeAction:(id)sender {
-    if([self.selectAction.titleLabel.text isEqualToString:@"Choose a Friend"]) {
-        self.selectAction.titleLabel.text = @"Which pictures would your friend like?";
-        self.navigationItem.title = @"Choose Pictures";
-        [self showPicker];
-    }
-    else if ([self.selectAction.titleLabel.text isEqualToString:@"Which pictures would your friend like?"]) {
-        self.navigationItem.title = @"Choose Upto 4 products";
-        
-    }
     self.selectAction.hidden = YES;
+    self.selectProduct.hidden = NO;
+    [self showPicker];
     
 }
 
@@ -97,6 +105,21 @@
 - (IBAction)mugIconClick:(id)sender {
     self.renderingProductImage.image = [UIImage imageNamed:@"snapfish-mug.png"];
     self.renderedOverlayImageFrame = CGRectMake(80, 67, 85, 85);
+}
+
+- (IBAction)productSelected:(id)sender {
+    
+    self.selectedProductInfoLabel.hidden = YES;
+    int subViewCount = [self.cartView.subviews count];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(subViewCount*40+5, 0, 40, 40)];
+    imageView.image = self.renderingProductImage.image;
+    self.cartView.hidden = NO;
+    [self.cartView addSubview:imageView];
+    [self.cartView setNeedsDisplay];
+    
+    [[TACommonState sharedObj].orderProducts addObject:self.renderingProductImage.image];
+    NSLog(@"select count %d", [[TACommonState sharedObj].orderProducts count]);
 }
 
 -(void) sendGiftOptions {
@@ -156,7 +179,11 @@
         [self.thumbnailArray addObject:[TAUtilities createThumbnail:img]];
         
     }
-    [self dismissViewControllerAnimated:YES completion:nil];
+    self.photosTableView.hidden = NO;
+    [self.playView setFrame:CGRectMake(83,47, 231, 470)];
+    self.cartView.hidden= NO;
+    [self dismissViewControllerAnimated:YES completion:^{
+    }];
     [self.photosTableView reloadData];
 }
 
@@ -188,7 +215,7 @@
 
 -(void)updateProductWithPhoto {
     UIImage *baseImage = self.renderingProductImage.image;
-    UIImage *overlayImage = self.selectedImage;
+    UIImage *overlayImage = self.imgArray[selectedImageIndex];
     CGSize finalSize = [baseImage size];
     UIGraphicsBeginImageContext(finalSize);
     [baseImage drawInRect:CGRectMake(0,0,finalSize.width,finalSize.height)];
@@ -211,10 +238,10 @@
         CFStringRef emailRef = ABMultiValueCopyValueAtIndex(multi, 0);
         NSLog(@"sending email to %@", (__bridge NSString *)emailRef);
         */
-        [mailComposer setToRecipients:[NSArray arrayWithObject:@"aajkaltak@gmail.com"]];
+        [mailComposer setToRecipients:[NSArray arrayWithObject:@"chandraveer009@gmail.com"]];
         NSString *subjectLine = @"Anupam has sent you trivia game";
         [mailComposer setSubject:subjectLine];
-        NSString *bodyText = @"Please click on the link below to play";
+        NSString *bodyText = @"Please click on the link below to play \n \n http://Tohfa.com?id=234";
         
         [mailComposer setMessageBody:bodyText isHTML:NO];
         [self presentViewController:mailComposer animated:YES completion:nil];
@@ -278,7 +305,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	self.selectedImage = [self.imgArray objectAtIndex:indexPath.row];
+	selectedImageIndex = indexPath.row;
     
     [self updateProductWithPhoto];
 }

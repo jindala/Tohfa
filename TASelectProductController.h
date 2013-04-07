@@ -16,6 +16,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *selectAction;
 @property (weak, nonatomic) IBOutlet UITableView *photosTableView;
 @property (weak, nonatomic) IBOutlet UIImageView *renderingProductImage;
+@property (weak, nonatomic) IBOutlet UIButton *selectProduct;
+@property (weak, nonatomic) IBOutlet UIView *cartView;
+@property (strong, nonatomic) IBOutlet UIView *playView;
+@property (weak, nonatomic) IBOutlet UILabel *selectedProductInfoLabel;
 
 
 
@@ -24,5 +28,6 @@
 - (IBAction)necklaceIconClick:(id)sender;
 - (IBAction)tshirtIconClick:(id)sender;
 - (IBAction)mugIconClick:(id)sender;
+- (IBAction)productSelected:(id)sender;
 
 @end
